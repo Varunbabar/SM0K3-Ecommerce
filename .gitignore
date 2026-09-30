@@ -6,7 +6,7 @@ frontend/.env
 # Spring Boot / Java
 backend/target/
 backend/.env
-notepad backend/src/main/resources/application.properties
+backend/src/main/resources/application.properties
 
 # IDE
 .idea/

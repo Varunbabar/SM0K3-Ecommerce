@@ -1,63 +1,284 @@
-import { useParams } from "react-router-dom";
-import { allProduct } from "../../Data/Shoes/allProduct";
+
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+
+// Men's sneakers
+import black from "../../assets/Shoes/MenSneak/black.png";
+import blue from "../../assets/Shoes/MenSneak/blue.png";
+import green from "../../assets/Shoes/MenSneak/green.png";
+import maroon from "../../assets/Shoes/MenSneak/maroon.png";
+
+// Men's running shoes
+import blackk from "../../assets/Shoes/MenRun/blackk.png";
+import bluee from "../../assets/Shoes/MenRun/bluee.png";
+import redd from "../../assets/Shoes/MenRun/redd.png";
+import whitee from "../../assets/Shoes/MenRun/whitee.png";
+
+// Women's sneakers
+import beige from "../../assets/Shoes/WoSneak/beige.png";
+import greenn from "../../assets/Shoes/WoSneak/greenn.png";
+import pink from "../../assets/Shoes/WoSneak/pink.png";
+import pinkie from "../../assets/Shoes/WoSneak/pinkie.png";
+import purple from "../../assets/Shoes/WoSneak/purple.png";
+import purplex from "../../assets/Shoes/WoSneak/purplex.png";
+
+// Women's running shoes
+import neon from "../../assets/Shoes/WoRun/neon.png";
+import net from "../../assets/Shoes/WoRun/net.png";
+import off from "../../assets/Shoes/WoRun/off.png";
+
+const productImages = {
+  4: black,
+  5: blue,
+  6: green,
+  7: maroon,
+  18: blackk,
+  19: bluee,
+  20: redd,
+  21: whitee,
+  8: pink,
+  9: greenn,
+  10: beige,
+  11: purple,
+  25: pinkie,
+  26: purplex,
+  22: off,
+  23: net,
+  24: neon,
+};
 
 const ProductDetail = () => {
   const { id } = useParams();
-  console.log(id);
-  const product = allProduct.find((item) => item.id === Number(id));
-  if (!product) {
-    return <h1>Product Not Found</h1>;
-  }
-  return (
-    <div className="max-w-7xl mx-auto p-10 grid grid-cols-2 gap-12">
-      <div>
-        <img src={product.image} alt={product.name} className="w-full " />
-      </div>
-      <div>
-        <div className="text-gray-500 text-xl">
-          <h2>{product.brand}</h2>
-        </div>
-        <div className="text-3xl font-semibold mt-2">
-          <h1>{product.name}</h1>
-        </div>
-        <div className="text-xl mt-2">
-          Description- Crafted by skilled Kargir (कारीगर), blending timeless
-          craftsmanship with modern streetwear style.
-        </div>
-        
-        <div className="text-2xl text-black-600 font-semibold mt-4">
-          <h2> ₹ {product.price.toLocaleString()}</h2>
-        </div>
-        <div className="bg-yellow-100 border border-yellow-300 rounded-lg p-4 mt-6">
-          <p className="font-bold">Limited Time Deal !</p>
+  const navigate = useNavigate();
 
+  const [product, setProduct] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [notification, setNotification] = useState("");
+  const [notificationType, setNotificationType] = useState("success");
+  const [addingToCart, setAddingToCart] = useState(false);
+
+  const showNotification = (message, type = "success") => {
+    setNotification(message);
+    setNotificationType(type);
+
+    // Clear the notification after three seconds.
+    setTimeout(() => {
+      setNotification("");
+    }, 3000);
+  };
+
+  useEffect(() => {
+    setProduct(null);
+    setSelectedSize(null);
+    setQuantity(1);
+
+    fetch(`http://localhost:8081/products/${id}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch product");
+        }
+        return response.json();
+      })
+      .then((data) => setProduct(data))
+      .catch((error) => {
+        console.error("Error fetching product:", error);
+        setProduct(null);
+      });
+  }, [id]);
+
+ 
+const handleAddToCart = async () => {
+  if (selectedSize === null) {
+    showNotification("Please select a shoe size.", "error");
+    return;
+  }
+
+  const token = localStorage.getItem("token");
+const userId = localStorage.getItem("userId");
+
+if (!token || !userId) {
+  navigate("/login");
+  return;
+}
+
+  setAddingToCart(true);
+
+  try {
+    const response = await fetch(
+  `http://localhost:8081/cart/${userId}/add/${id}?size=${selectedSize}&quantity=${quantity}`,
+  {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || `Request failed: ${response.status}`);
+    }
+
+    showNotification("Added to cart successfully!");
+  } catch (error) {
+    console.error("Add to cart error:", error);
+    showNotification(
+      error.message || "Could not add product to cart.",
+      "error"
+    );
+  } finally {
+    setAddingToCart(false);
+  }
+};
+
+
+  if (!product) {
+    return (
+      <h1 className="text-center mt-10">
+        Loading product...
+      </h1>
+    );
+  }
+
+  const image = productImages[Number(id)] || product.imageUrl;
+
+  return (
+    <div className="max-w-7xl mx-auto p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+
+      {/* Notification */}
+      {notification && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={`fixed right-5 top-20 z-50 rounded-lg px-6 py-3 text-white shadow-lg ${
+            notificationType === "success"
+              ? "bg-green-600"
+              : "bg-red-600"
+          }`}
+        >
+          {notification}
+        </div>
+      )}
+
+      {/* Product Image */}
+      <div>
+        <div className="w-full h-[350px] md:h-[500px] flex items-center justify-center bg-gray-100 rounded-lg overflow-hidden">
+          {image ? (
+            <img
+              src={image}
+              alt={product.name}
+              className="w-full h-full object-contain scale-125"
+            />
+          ) : (
+            <p className="text-gray-500">Image unavailable</p>
+          )}
+        </div>
+      </div>
+
+      {/* Product Information */}
+      <div>
+        <p className="text-gray-500 text-xl">
+          {product.color}
+        </p>
+
+        <h1 className="text-3xl font-semibold mt-2">
+          {product.name}
+        </h1>
+
+        {product.description && (
+          <p className="text-xl mt-4">
+            {product.description}
+          </p>
+        )}
+
+        <p className="text-2xl text-black font-semibold mt-4">
+          ₹ {Number(product.price).toLocaleString("en-IN")}
+        </p>
+
+        <div className="bg-yellow-100 border border-yellow-300 rounded-lg p-4 mt-6">
+          <p className="font-bold">Limited Time Deal!</p>
           <p>Get it at ₹4,399 using SM0K3 coupon.</p>
         </div>
+
+        {/* Shoe Sizes */}
         <div className="pt-8 text-xl">
-          Select Size-
-          <div className="flex gap-2">
-            {product.sizes.map((size)=>(
-            <Button variant="outlined">UK {size}</Button>
+          <p>Select Size</p>
+
+          <div className="flex flex-wrap gap-2 mt-3">
+            {product.sizes?.map((size) => (
+              <Button
+                key={size}
+                variant={selectedSize === size ? "contained" : "outlined"}
+                onClick={() => setSelectedSize(size)}
+                aria-pressed={selectedSize === size}
+              >
+                UK {size}
+              </Button>
             ))}
           </div>
         </div>
-        <div className="flex gap-4 mt-10">
-          <Button variant="outlined" color="secondary" size="large">
-            Add to Cart
+
+        {/* Quantity and Purchase Buttons */}
+        <div className="flex flex-wrap items-center gap-4 mt-8">
+          <div className="flex items-center gap-2">
+            <span className="text-base">Quantity:</span>
+
+            <Button
+              variant="outlined"
+              disabled={quantity <= 1}
+              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              aria-label="Decrease quantity"
+            >
+              −
+            </Button>
+
+            <span className="min-w-6 text-center">
+              {quantity}
+            </span>
+
+            <Button
+              variant="outlined"
+              disabled={quantity >= 10}
+              onClick={() => setQuantity((q) => Math.min(10, q + 1))}
+              aria-label="Increase quantity"
+            >
+              +
+            </Button>
+          </div>
+
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={handleAddToCart}
+            disabled={addingToCart}
+          >
+            {addingToCart ? "Adding..." : "Add to Cart"}
           </Button>
 
-          <Button variant="outlined" color="primary" size="large">
+          <Button
+            variant="outlined"
+            color="primary"
+            size="large"
+            onClick={() => {
+              alert("Buy Now will be connected to checkout next.");
+            }}
+          >
             Buy Now
           </Button>
         </div>
-        <div className="bg-gray-100 border border-gray-300 rounded-lg mt-12 p-4">
-          <p className="">- Free 7-day returns and exchanges</p>
-          <p className="">- Delivey in 3-5 days</p>
-          <p className="">- Free shipping</p>
+
+        {/* Delivery Information */}
+        <div className="bg-gray-100 border border-gray-300 rounded-lg mt-10 p-4">
+          <p>Free 7-day returns and exchanges</p>
+          <p>Delivery in 3–5 days</p>
+          <p>Free shipping</p>
         </div>
       </div>
     </div>
   );
 };
+
 export default ProductDetail;

@@ -3,6 +3,7 @@ package com.MainApp.Entity;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +24,7 @@ public class UserEntity {
     @Column(unique = true)
     private String email;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @OneToMany(mappedBy = "user")
     @JsonIgnore

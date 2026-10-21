@@ -1,5 +1,5 @@
 import beige from '../../assets/Shoes/WoSneak/beige.png'
-import green from '../../assets/Shoes/WoSneak/green.png'
+import greenn from '../../assets/Shoes/WoSneak/greenn.png'
 import pink from '../../assets/Shoes/WoSneak/pink.png'
 import purple from '../../assets/Shoes/WoSneak/purple.png'
 import pinkie from '../../assets/Shoes/WoSneak/pinkie.png'
@@ -16,7 +16,7 @@ export const womenShoes =[
     },
     {
         id:9,
-        image:green,
+        image:greenn,
         name:"Leaves Green",
         price:5400,
         color:"Green",

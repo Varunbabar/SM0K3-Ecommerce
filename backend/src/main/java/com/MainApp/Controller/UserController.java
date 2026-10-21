@@ -3,6 +3,8 @@ package com.MainApp.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.MainApp.DTO.LoginRequest;
@@ -36,11 +38,29 @@ public class UserController {
         return userService.getUserById(id);
     }
     @PostMapping("/login")
-    public String loginUser(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest request) {
 
-        return userService.loginUser(
+        String token = userService.loginUser(
                 request.getEmail(),
                 request.getPassword()
+        );
+
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(java.util.Map.of(
+                            "message", "Invalid email or password"
+                    ));
+        }
+
+        UserEntity user = userService.getUserByEmail(
+                request.getEmail()
+        );
+
+        return ResponseEntity.ok(
+                java.util.Map.of(
+                        "token", token,
+                        "userId", user.getId()
+                )
         );
     }
 }

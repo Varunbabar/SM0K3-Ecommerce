@@ -24,10 +24,11 @@ public class UserService {
 
     // Register User
     public UserEntity registerUser(UserEntity user) {
-
         user.setPassword(
             passwordEncoder.encode(user.getPassword())
         );
+
+        user.setRole("USER");
 
         return userRepository.save(user);
     }
@@ -40,6 +41,9 @@ public class UserService {
     // Get User By ID
     public UserEntity getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
     
 

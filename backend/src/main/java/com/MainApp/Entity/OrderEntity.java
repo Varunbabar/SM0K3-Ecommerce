@@ -1,6 +1,8 @@
+
 package com.MainApp.Entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -23,10 +25,24 @@ public class OrderEntity {
 
     private String status;
 
+    // Delivery details
+    private String fullName;
+    private String phone;
+    private String addressLine;
+    private String city;
+    private String state;
+    private String pincode;
+
+    // User who placed the order
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItemEntity> orderItems;
+    // Items included in the order
+    @OneToMany(
+        mappedBy = "order",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<OrderItemEntity> orderItems = new ArrayList<>();
 }

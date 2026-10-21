@@ -1,153 +1,119 @@
 import React from "react";
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography, Box } from "@mui/material";
+
 import instagrem from "../../assets/Media/instagrem.png";
 import facebookk from "../../assets/Media/facebookk.png";
 import x from "../../assets/Media/x.png";
+
 export const Footer = () => {
   return (
-    <div>
+    <Box sx={{ mt: 10 }}>
       <Grid
-
-        container justifyContent="space-evenly"  columnSpacing={30}
-        sx={{ bgcolor: "beige", color: "brown", py: 3,  textAlign: "center" , mt:10}}
+        container
+        spacing={3}
+        sx={{
+          bgcolor: "beige",
+          color: "brown",
+          py: 3,
+          textAlign: "center",
+        }}
       >
-        <Grid item xs={12} sm={6} md={3}  >
-          <Typography className="pb-3" variant="h6">
-            {" "}
+        {/* Company */}
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <Typography variant="h6" gutterBottom>
             Company
-            </Typography>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              About Us
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              Careers
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              Press
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              Blog
-            </Button>
-          </div>
+          </Typography>
+
+          {["About Us", "Careers", "Press", "Blog"].map((text) => (
+            <Box key={text}>
+              <Button className="pb-5" sx={{ color: "brown" }}>
+                {text}
+              </Button>
+            </Box>
+          ))}
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}  >
-          <Typography className="pb-5" variant="h6">
-            {" "}
+        {/* Social */}
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <Typography variant="h6" gutterBottom>
             Social
           </Typography>
-          <div>
-            <Button
-              className="pb-5"
-              variant="h6"
-              gutterBottom
-              startIcon={
-                <img src={instagrem} alt="Instagram" height={20} width={20} />
-              }
-            >
-              Instagram
-            </Button>
-          </div>
-          <div>
-            <Button
-              className="pb-5"
-              variant="h6"
-              gutterBottom
-              startIcon={
-                <img src={facebookk} alt="Facebook" height={20} width={20} />
-              }
-            >
-              Facebook
-            </Button>
-          </div>
-          <div>
-            <Button
-              className="pb-5"
-              variant="h6"
-              gutterBottom
-              startIcon={<img src={x} alt="X" height={20} width={20} />}
-            >
-              X
-            </Button>
-          </div>
+
+          {[
+            { name: "Instagram", image: instagrem },
+            { name: "Facebook", image: facebookk },
+            { name: "X", image: x },
+          ].map((social) => (
+            <Box key={social.name}>
+              <Button
+                className="pb-5"
+                sx={{ color: "brown" }}
+                startIcon={
+                  <img
+                    src={social.image}
+                    alt=""
+                    height={20}
+                    width={20}
+                  />
+                }
+              >
+                {social.name}
+              </Button>
+            </Box>
+          ))}
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3} >
-          <Typography className="pb-3" variant="h6">
-            {" "}
-            Store's
+        {/* Stores */}
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            Stores
           </Typography>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              Mumbai
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              Pune
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              Banglore
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              Delhi
-            </Button>
-          </div>
+
+          {["Mumbai", "Pune", "Bangalore", "Delhi"].map((city) => (
+            <Box key={city}>
+              <Button className="pb-5" sx={{ color: "brown" }}>
+                {city}
+              </Button>
+            </Box>
+          ))}
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3} >
-          <Typography className="pb-3" variant="h6">
-            {" "}
+        {/* More Info */}
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <Typography variant="h6" gutterBottom>
             More Info
           </Typography>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              Contact Us
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              FAQ
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              Terms & Conditions
-            </Button>
-          </div>
-          <div>
-            <Button className="pb-5" variant="h6" gutterBottom>
-              Privacy Policy
-            </Button>
-          </div>
+
+          {[
+            "Contact Us",
+            "FAQ",
+            "Terms & Conditions",
+            "Privacy Policy",
+          ].map((text) => (
+            <Box key={text}>
+              <Button className="pb-5" sx={{ color: "brown" }}>
+                {text}
+              </Button>
+            </Box>
+          ))}
         </Grid>
       </Grid>
-        <Typography
-  variant="body2"
-  align="center"
-  sx={{
-    bgcolor: "beige",
-    color: "brown",
-    py: 2,
-    borderTop: "1px solid #c9b98a"
-  }}
->
-  &copy; {new Date().getFullYear()} Your Company. All rights reserved.
-</Typography>
-      
 
-    </div>
+      {/* Copyright */}
+      <Typography
+        variant="body2"
+        align="center"
+        sx={{
+          bgcolor: "beige",
+          color: "brown",
+          py: 2,
+          borderTop: "1px solid #c9b98a",
+        }}
+      >
+        &copy; {new Date().getFullYear()} SM0K3. All rights reserved.
+      </Typography>
+    </Box>
   );
 };
+
 export default Footer;

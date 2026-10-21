@@ -11,7 +11,10 @@ import AboutPage from './Components/Pages/AboutPage';
 import LacePage from './Components/Pages/LacePage';
 import PersonPage from './Components/Pages/PersonPage';
 import CartPage from './Components/Pages/CartPages';
-import ProductDetail from './Components/Pages/ProductDetail'
+import LoginPage from './Components/LoginRegisterUI/LoginPage';
+import ProductDetail from './Components/Pages/ProductDetail';
+import CheckoutPage from "./Components/Pages/CheckoutPage";
+import OrderHistoryPage from './Components/Pages/OrderHistory'; 
 function App() {
   return (
     <div className="" >
@@ -30,6 +33,9 @@ function App() {
           <Route path="/person" element={<PersonPage/>}/>
           <Route path="/cart" element={<CartPage/>}/>
           <Route path="/product/:id" element={<ProductDetail/>}/>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/orders" element={<OrderHistoryPage />} />
           </Routes>
         </div>
         <Footer/>  

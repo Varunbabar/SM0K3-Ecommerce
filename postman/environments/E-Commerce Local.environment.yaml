@@ -1,0 +1,6 @@
+name: E-Commerce Local
+values:
+  - key: auth_token
+    value: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlckBleGFtcGxlLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzkyNDM4NDI0LCJleHAiOjE3OTI0NDIwMjR9.kjT0kLywAsUDj506UBSXD4tJG9BjRKmLesX3aJkK82E
+    enabled: true
+    type: secret

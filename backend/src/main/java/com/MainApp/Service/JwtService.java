@@ -19,21 +19,21 @@ public class JwtService {
     private final SecretKey key =
             Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 
+    // Generate a token valid for 24 hours
     public String generateToken(String email, String role) {
+
+        long expirationTime = 1000L * 60 * 60 * 24;
 
         return Jwts.builder()
                 .subject(email)
                 .claim("role", role)
                 .issuedAt(new Date())
-                .expiration(
-                    new Date(System.currentTimeMillis() + 1000 * 60 * 60)
-                )
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(key)
                 .compact();
     }
 
     public String extractEmail(String token) {
-
         return Jwts.parser()
                 .verifyWith(key)
                 .build()
@@ -41,8 +41,8 @@ public class JwtService {
                 .getPayload()
                 .getSubject();
     }
-    public String extractRole(String token) {
 
+    public String extractRole(String token) {
         return Jwts.parser()
                 .verifyWith(key)
                 .build()

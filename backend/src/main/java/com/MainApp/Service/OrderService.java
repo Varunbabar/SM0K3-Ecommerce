@@ -1,20 +1,19 @@
 package com.MainApp.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.MainApp.Entity.CartEntity;
 import com.MainApp.Entity.CartItemEntity;
 import com.MainApp.Entity.OrderEntity;
 import com.MainApp.Entity.OrderItemEntity;
 import com.MainApp.Entity.UserEntity;
-
+import com.MainApp.repository.CartRepository;
 import com.MainApp.repository.OrderRepository;
-import com.MainApp.repository.OrderItemRepository;
 import com.MainApp.repository.UserRepository;
 
 @Service
@@ -24,88 +23,74 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private OrderItemRepository orderItemRepository;
+    private CartRepository cartRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private CartService cartService;
+    @Transactional
+    public OrderEntity placeOrder(
+            Long userId,
+            String fullName,
+            String phone,
+            String addressLine,
+            String city,
+            String state,
+            String pincode) {
 
-
-    // Place Order
-    public OrderEntity placeOrder(Long userId) {
-
-        // Find user
-        UserEntity user = userRepository
-                .findById(userId)
-                .orElse(null);
+        UserEntity user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
             return null;
         }
 
-        // Find user's cart
-        CartEntity cart = cartService.getCartByUserId(userId);
+        CartEntity cart = cartRepository.findByUserId(userId);
 
         if (cart == null || cart.getCartItems() == null
                 || cart.getCartItems().isEmpty()) {
             return null;
         }
-        
 
-        // Create Order
         OrderEntity order = new OrderEntity();
-
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
         order.setStatus("PLACED");
 
-        List<OrderItemEntity> orderItems = new ArrayList<>();
+        order.setFullName(fullName);
+        order.setPhone(phone);
+        order.setAddressLine(addressLine);
+        order.setCity(city);
+        order.setState(state);
+        order.setPincode(pincode);
 
-        double totalAmount = 0;
+        double totalAmount = 0.0;
 
-
-        // Convert CartItems → OrderItems
         for (CartItemEntity cartItem : cart.getCartItems()) {
-
             OrderItemEntity orderItem = new OrderItemEntity();
 
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setSelectedSize(cartItem.getSelectedSize());
+            orderItem.setPrice(cartItem.getProduct().getPrice());
 
-            double price = cartItem.getProduct().getPrice();
+            totalAmount += orderItem.getPrice()
+                    * orderItem.getQuantity();
 
-            orderItem.setPrice(price);
-
-            totalAmount += price * cartItem.getQuantity();
-
-            orderItems.add(orderItem);
+            order.getOrderItems().add(orderItem);
         }
 
-
-        order.setOrderItems(orderItems);//Set OrderDetails
         order.setTotalAmount(totalAmount);
 
-        OrderEntity savedOrder = orderRepository.save(order);//SaveOrder
+        OrderEntity savedOrder = orderRepository.save(order);
 
-
-        cartService.clearCart(userId);//Clear Cart
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
 
         return savedOrder;
     }
-    public List<OrderEntity> getOrdersByUserId(Long userId) { 
-    	 
-        UserEntity user = userRepository 
-                .findById(userId) 
-                .orElse(null); 
-     
-        if (user == null) { 
-            return new ArrayList<>(); 
-        } 
-     
-        return orderRepository.findByUserId(userId); 
-    } 
+
+    public List<OrderEntity> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
+    }
 }

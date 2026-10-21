@@ -1,3 +1,4 @@
+
 package com.MainApp.Controller;
 
 import java.util.List;
@@ -18,16 +19,13 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    // Add product
     @PostMapping
     public ProductEntity addProductEntity(@RequestBody ProductEntity product) {
         return productRepository.save(product);
     }
 
-    // Get all products
     @GetMapping
     public List<ProductResponse> getAllProducts() {
-
         return productRepository.findAll()
                 .stream()
                 .map(product -> new ProductResponse(
@@ -36,21 +34,19 @@ public class ProductController {
                         product.getColor(),
                         product.getPrice(),
                         product.getDescription(),
+                        product.getImageUrl(),
                         product.getSizes()
                                 .stream()
                                 .map(size -> size.getSize())
-                                .collect(Collectors.toList())
+                                .collect(Collectors.toList()),
+                        product.getCategory()
                 ))
                 .collect(Collectors.toList());
     }
 
-    // Get product by ID
     @GetMapping("/{id}")
     public ProductResponse getProductById(@PathVariable Long id) {
-
-        ProductEntity product = productRepository
-                .findById(id)
-                .orElse(null);
+        ProductEntity product = productRepository.findById(id).orElse(null);
 
         if (product == null) {
             return null;
@@ -62,22 +58,44 @@ public class ProductController {
                 product.getColor(),
                 product.getPrice(),
                 product.getDescription(),
+                product.getImageUrl(),
                 product.getSizes()
                         .stream()
                         .map(size -> size.getSize())
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                product.getCategory()
         );
     }
 
-    // Update product
+    @GetMapping("/category/{category}")
+    public List<ProductResponse> getProductsByCategory(
+            @PathVariable String category) {
+
+        return productRepository.findByCategoryIgnoreCase(category)
+                .stream()
+                .map(product -> new ProductResponse(
+                        product.getId(),
+                        product.getName(),
+                        product.getColor(),
+                        product.getPrice(),
+                        product.getDescription(),
+                        product.getImageUrl(),
+                        product.getSizes()
+                                .stream()
+                                .map(size -> size.getSize())
+                                .collect(Collectors.toList()),
+                        product.getCategory()
+                ))
+                .collect(Collectors.toList());
+    }
+
     @PutMapping("/{id}")
     public ProductEntity updateProduct(
             @PathVariable Long id,
             @RequestBody ProductEntity product) {
 
-        ProductEntity existingProduct = productRepository
-                .findById(id)
-                .orElse(null);
+        ProductEntity existingProduct =
+                productRepository.findById(id).orElse(null);
 
         if (existingProduct == null) {
             return null;
@@ -85,13 +103,14 @@ public class ProductController {
 
         existingProduct.setName(product.getName());
         existingProduct.setColor(product.getColor());
+        existingProduct.setCategory(product.getCategory());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setDescription(product.getDescription());
+        existingProduct.setImageUrl(product.getImageUrl());
 
         return productRepository.save(existingProduct);
     }
 
-    // Delete product by ID
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
         productRepository.deleteById(id);

@@ -13,16 +13,16 @@ import maroon from "../../assets/Shoes/MenSneak/maroon.png";
 import blackk from "../../assets/Shoes/MenRun/blackk.png";
 import bluee from "../../assets/Shoes/MenRun/bluee.png";
 import redd from "../../assets/Shoes/MenRun/redd.png";
-import whitee from "../../assets/Shoes/MenRun/whitee.png";  
+import whitee from "../../assets/Shoes/MenRun/whitee.png";
+
 const MenPage = () => {
   const [products, setProducts] = useState([]);
 
   const sneakerImages = {
-    4: black,
+    4: green,
     5: blue,
-    6: green,
-    7: maroon,
-    
+    6: maroon,
+    7: black,
   };
 
   const runningImages = {
@@ -33,25 +33,28 @@ const MenPage = () => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:8081/products/category/MEN")
+    fetch("http://localhost:8081/products")
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Failed to fetch men's products");
+          throw new Error("Failed to fetch products");
         }
         return response.json();
       })
-      .then((data) => setProducts(data))
-      .catch((error) =>
-        console.error("Error fetching men's products:", error)
-      );
+      .then((data) => {
+        console.log("Products received:", data);
+        setProducts(Array.isArray(data) ? data : []);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
   }, []);
 
-  const sneakers = products.filter((product) =>
-    [4, 5, 6, 7].includes(Number(product.id))
+  const sneakers = products.filter(
+    (product) => product.category === "Men Sneakers"
   );
 
-  const runningShoes = products.filter((product) =>
-    [18, 19, 20, 21].includes(Number(product.id))
+  const runningShoes = products.filter(
+    (product) => product.category === "Men Running"
   );
 
   return (
@@ -76,7 +79,7 @@ const MenPage = () => {
           Men Sneakers
         </h2>
 
-        <div className="grid grid-cols-3 gap-6 p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
           {sneakers.map((product) => (
             <HomeSectionCard
               key={product.id}
@@ -84,12 +87,15 @@ const MenPage = () => {
                 ...product,
                 image:
                   sneakerImages[Number(product.id)] ||
-                  product.imageUrl ||
-                  undefined,
+                  product.imageUrl,
               }}
             />
           ))}
         </div>
+
+        {sneakers.length === 0 && (
+          <p className="text-center py-4">No sneakers found.</p>
+        )}
       </section>
 
       <section className="py-4">
@@ -97,7 +103,7 @@ const MenPage = () => {
           Men Running Shoes
         </h2>
 
-        <div className="grid grid-cols-3 gap-6 p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
           {runningShoes.map((product) => (
             <HomeSectionCard
               key={product.id}
@@ -105,12 +111,15 @@ const MenPage = () => {
                 ...product,
                 image:
                   runningImages[Number(product.id)] ||
-                  product.imageUrl ||
-                  undefined,
+                  product.imageUrl,
               }}
             />
           ))}
         </div>
+
+        {runningShoes.length === 0 && (
+          <p className="text-center py-4">No running shoes found.</p>
+        )}
       </section>
     </div>
   );

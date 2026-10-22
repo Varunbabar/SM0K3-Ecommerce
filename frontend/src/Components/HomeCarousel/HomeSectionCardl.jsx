@@ -21,15 +21,22 @@ const HomeSectionCard = ({ product }) => {
       "
     >
       <div className="h-[24rem] bg-white flex items-center justify-center">
-       <img
+      
+<img
   className="max-w-[90%] max-h-[90%] object-contain"
   src={product.image || product.imageUrl}
-  alt={product.name || "Product"}
+  alt={product.name || product.title || "Product"}
   onError={(e) => {
-    console.log("Image failed:", e.currentTarget.src);
-    console.log("Product data:", product);
+    console.error("Image failed to load:", {
+      name: product.name,
+      image: product.image,
+      imageUrl: product.imageUrl,
+      actualSrc: e.currentTarget.src,
+    });
   }}
 />
+
+
       </div>
 
       <div className="p-4">

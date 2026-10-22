@@ -12,8 +12,10 @@ export const SectionCarousel = ({ data, sectionName }) => {
 
   const syncActiveIndex = ({ item }) => setActiveIndex(item);
   const items = data
-    .slice(activeIndex, activeIndex + 3)
-    .map((item, index) => <HomeSectionCard key={index} product={item} />);
+   .slice(activeIndex, activeIndex + 3)
+.map((item) => (
+  <HomeSectionCard key={item.id} product={item} />
+));
   return (
     <div>
       <h2 className="text-xxl font-extrabold text-grey-500 py-5">

@@ -10,10 +10,9 @@ const LacePage = () =>{
             </div>
         {
         <div className="grid grid-cols-3 gap-6 p-8">
-            {lace.map((lace,index)=>(
-                <HomeSectionCard key={index} product={lace}/>
-            )
-            )}
+            {lace.map((item) => (
+  <HomeSectionCard key={item.id} product={item} />
+))}
         </div>
         }
        </div>    

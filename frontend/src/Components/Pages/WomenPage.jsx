@@ -20,40 +20,43 @@ const WomenPage = () => {
   const [products, setProducts] = useState([]);
 
   const sneakerImages = {
-  8: pink,
-  9: green,
-  10: beige,
-  11: purple,
-  25: pinkie,
-  26: purplex,
-};
+    8: pink,
+    9: green,
+    10: beige,
+    11: purple,
+    25: pinkie,
+    26: purplex,
+  };
 
-const runningImages = {
-  22: off,
-  23: net,
-  24: neon,
-};
+  const runningImages = {
+    22: off,
+    23: net,
+    24: neon,
+  };
 
   useEffect(() => {
-    fetch("http://localhost:8081/products/category/WOMEN")
+    fetch("http://localhost:8081/products")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch women's products");
         }
         return response.json();
       })
-      .then((data) => setProducts(data))
-      .catch((error) =>
-        console.error("Error fetching women's products:", error)
-      );
+      .then((data) => {
+        console.log("Products received:", data);
+        setProducts(Array.isArray(data) ? data : []);
+      })
+      .catch((error) => {
+        console.error("Error fetching women's products:", error);
+      });
   }, []);
 
   const sneakers = products.filter(
-    (product) => sneakerImages[Number(product.id)]
+    (product) => product.category === "Women Sneakers"
   );
 
   const runningShoes = products.filter(
-    (product) => runningImages[Number(product.id)]
+    (product) => product.category === "Women Running"
   );
 
   return (
@@ -78,17 +81,23 @@ const runningImages = {
           Women Sneakers
         </h2>
 
-        <div className="grid grid-cols-3 gap-6 p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
           {sneakers.map((product) => (
             <HomeSectionCard
               key={product.id}
               product={{
                 ...product,
-                image: sneakerImages[Number(product.id)],
+                image:
+                  sneakerImages[Number(product.id)] ||
+                  product.imageUrl,
               }}
             />
           ))}
         </div>
+
+        {sneakers.length === 0 && (
+          <p className="text-center py-4">No sneakers found.</p>
+        )}
       </section>
 
       <section className="py-4">
@@ -96,17 +105,23 @@ const runningImages = {
           Women Running Shoes
         </h2>
 
-        <div className="grid grid-cols-3 gap-6 p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
           {runningShoes.map((product) => (
             <HomeSectionCard
               key={product.id}
               product={{
                 ...product,
-                image: runningImages[Number(product.id)],
+                image:
+                  runningImages[Number(product.id)] ||
+                  product.imageUrl,
               }}
             />
           ))}
         </div>
+
+        {runningShoes.length === 0 && (
+          <p className="text-center py-4">No running shoes found.</p>
+        )}
       </section>
     </div>
   );

@@ -28,24 +28,46 @@ import off from "../../assets/Shoes/WoRun/off.png";
 import net from "../../assets/Shoes/WoRun/net.png";
 import neon from "../../assets/Shoes/WoRun/neon.png";
 
+// Collaboration sneakers
+import velvet from "../../assets/Shoes/CollabSneak/Velvet.png";
+import red from "../../assets/Shoes/CollabSneak/Red.png";
+import Green from "../../assets/Shoes/CollabSneak/Green.png";
+
+// Laces
+import redLace from "../../assets/Laces/redLace.png";
+import skinLace from "../../assets/Laces/skinLace.png";
+import blackLace from "../../assets/Laces/blackLace.png";
+
+// Product IDs must match the database and allProduct.js.
 const productImages = {
-  4: black,
-  5: blue,
-  6: green,
-  7: maroon,
-  18: blackk,
-  19: bluee,
-  20: redd,
-  21: whitee,
-  8: pink,
-  9: greenn,
-  10: beige,
-  11: purple,
-  25: pinkie,
-  26: purplex,
-  22: off,
-  23: net,
-  24: neon,
+  4: green,       // Olive Green
+  5: blue,        // Ocean BLue
+  6: maroon,      // Lava Red
+  7: black,       // Shadow Black
+
+  8: pink,        // Baby Pink
+  9: greenn,      // Leaves Green
+  10: beige,      // Sand Beige
+  11: purple,      // BlackCurrant Purple
+
+  12: Green,      // Shrub Green
+  13: velvet,     // Milkyway
+  14: red,        // Red Velvet
+
+  15: redLace,    // Red laces
+  16: skinLace,   // Blue laces
+  17: blackLace,  // Beige laces
+
+  18: blackk,     // Shadow Black running shoes
+  19: bluee,      // Mist BLue
+  20: redd,       // Blood Red
+  21: whitee,     // Air White
+
+  22: off,        // Coral
+  23: net,        // Net
+  24: neon,       // Neon
+  25: pinkie,     // Rose Pink
+  26: purplex,    // Wakanda
 };
 
 const CartPage = () => {
@@ -89,6 +111,9 @@ const CartPage = () => {
       }
 
       const data = await response.json();
+
+      console.log("Cart API response:", data);
+
       setCart(data);
     } catch (err) {
       console.error("Cart fetch error:", err);
@@ -219,7 +244,11 @@ const CartPage = () => {
           <h2 className="text-xl text-gray-500 mb-5">
             Your cart is empty.
           </h2>
-          <Button variant="contained" onClick={() => navigate("/men")}>
+
+          <Button
+            variant="contained"
+            onClick={() => navigate("/men")}
+          >
             Continue Shopping
           </Button>
         </div>
@@ -227,42 +256,70 @@ const CartPage = () => {
         <>
           <div className="space-y-6">
             {items.map((item) => {
-              const price = Number(item.product?.price ?? 0);
+              const productId = Number(item.product?.id);
+              const product = item.product;
+
+              const price = Number(product?.price ?? 0);
               const quantity = Number(item.quantity ?? 0);
               const isBusy = busyItemId === item.id;
+
               const image =
-                productImages[Number(item.product?.id)] ||
-                item.product?.imageUrl;
+                productImages[productId] ||
+                product?.imageUrl;
+
+              console.log("Cart product image debug:", {
+                productId,
+                productName: product?.name,
+                mappedImage: productImages[productId],
+                databaseImageUrl: product?.imageUrl,
+                selectedImage: image,
+              });
 
               return (
                 <div
                   key={item.id}
                   className="border rounded-lg p-4 md:p-5 flex flex-col sm:flex-row sm:items-center gap-4"
                 >
+                  {/* Product image */}
                   <div className="w-full sm:w-32 h-36 flex-shrink-0 overflow-hidden">
                     {image ? (
                       <img
                         src={image}
-                        alt={item.product?.name || "Product"}
+                        alt={product?.name || "Product"}
                         className="w-full h-full object-contain"
+                        onLoad={() => {
+                          console.log(
+                            "Image loaded successfully:",
+                            product?.name
+                          );
+                        }}
+                        onError={(event) => {
+                          console.error(
+                            "Image failed to load:",
+                            product?.name,
+                            event.currentTarget.src
+                          );
+                        }}
                       />
                     ) : (
-                      <div className="h-full flex items-center justify-center text-gray-400">
-                        Image unavailable
+                      <div className="h-full flex items-center justify-center text-red-500 text-center text-sm">
+                        No image mapped for product ID{" "}
+                        {String(product?.id)}
                       </div>
                     )}
                   </div>
 
+                  {/* Product details */}
                   <div className="flex-1">
                     <h2 className="text-xl font-semibold">
-                      {item.product?.name ?? "Product unavailable"}
+                      {product?.name ?? "Product unavailable"}
                     </h2>
 
                     <p className="text-gray-500">
-                      Color: {item.product?.color ?? "N/A"}
+                      Color: {product?.color ?? "N/A"}
                     </p>
 
-                    <p>Size: UK {item.selectedSize}</p>
+                    <p>Size: UK {item.selectedSize ?? "N/A"}</p>
 
                     <p className="mt-1">
                       Price: ₹{price.toLocaleString("en-IN")}
@@ -302,6 +359,7 @@ const CartPage = () => {
                     </p>
                   </div>
 
+                  {/* Remove item */}
                   <Button
                     variant="outlined"
                     color="error"
@@ -315,6 +373,7 @@ const CartPage = () => {
             })}
           </div>
 
+          {/* Cart total */}
           <div className="border-t mt-8 pt-5 flex flex-col items-end gap-4">
             <h2 className="text-2xl font-semibold">
               Total: ₹{total.toLocaleString("en-IN")}

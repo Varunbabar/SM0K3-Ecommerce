@@ -28,25 +28,48 @@ import neon from "../../assets/Shoes/WoRun/neon.png";
 import net from "../../assets/Shoes/WoRun/net.png";
 import off from "../../assets/Shoes/WoRun/off.png";
 
+// Drop sneakers
+import velvet from "../../assets/Shoes/CollabSneak/Velvet.png";
+import red from "../../assets/Shoes/CollabSneak/Red.png";
+import Green from "../../assets/Shoes/CollabSneak/Green.png";
+
+//Lace
+import redLace from "../../assets/Laces/redLace.png";
+import skinLace from "../../assets/Laces/skinLace.png";
+import blackLace from "../../assets/Laces/blackLace.png";
+
+
 const productImages = {
-  4: black,
-  5: blue,
-  6: green,
-  7: maroon,
-  18: blackk,
-  19: bluee,
-  20: redd,
-  21: whitee,
-  8: pink,
-  9: greenn,
-  10: beige,
-  11: purple,
-  25: pinkie,
-  26: purplex,
-  22: off,
-  23: net,
-  24: neon,
+  4: green,    // Olive Green
+  5: blue,     // Ocean BLue
+  6: maroon,   // Lava Red
+  7: black,    // Shadow Black (men's sneakers)
+
+  8: pink,     // Baby Pink
+  9: greenn,   // Leaves Green
+  10: beige,   // Sand Beige
+  11: purple,  // BlackCurrant Purple
+
+  12: Green,   // Shrub Green
+  13: velvet,  // Milkyway
+  14: red,     // Red Velvet
+
+  15: redLace,   // Red laces
+  16: skinLace,  // Blue laces
+  17: blackLace, // Beige laces
+
+  18: blackk,  // Shadow Black (men's running)
+  19: bluee,   // Mist BLue
+  20: redd,    // Blood Red
+  21: whitee,  // Air White
+
+  22: off,     // Coral
+  23: net,     // Net
+  24: neon,    // Neon
+  25: pinkie,  // Rose Pink
+  26: purplex, // Wakanda
 };
+
 
 const ProductDetail = () => {
   const { id } = useParams();

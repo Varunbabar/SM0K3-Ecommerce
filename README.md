@@ -1,8 +1,10 @@
+@'
 # SM0K3 – Sneaker E-Commerce
 
 A full-stack sneaker e-commerce website built using React.js, Spring Boot, and MySQL.
 
 ## Technologies
+
 - React.js
 - Java & Spring Boot
 - MySQL
@@ -11,31 +13,26 @@ A full-stack sneaker e-commerce website built using React.js, Spring Boot, and M
 ## Screenshots
 
 ### Cart
-![Cart](screenshot/cart.png)
+![Cart](frontend/screenshot/cart.png)
 
 ### Orders
-![Orders](screenshot/order.png)
+![Orders](frontend/screenshot/order.png)
 
 ### Vercel Deployment
-![Vercel](screenshot/vercel.png)
+![Vercel](frontend/screenshot/vercel.png)
 
 ### Render Deployment
-![Render](screenshot/render.png)
+![Render](frontend/screenshot/render.png)
 
 ## Demo
 
-[View Project Recording](screenshot/SM0K3.mp4)
+[View Project Recording](frontend/screenshot/SM0K3.mp4)
 
 ## Run Locally
 
-Frontend:
+### Frontend
+
 ```bash
 cd frontend
 npm install
 npm start
-```
-
-Backend: Run `BackendApplication.java` from your Java IDE.
-
-## Author
-Varun Babar

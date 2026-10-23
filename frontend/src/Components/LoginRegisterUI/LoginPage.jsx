@@ -17,8 +17,10 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:8081/users/login",
+     const API_URL = process.env.REACT_APP_API_URL;
+
+const response = await fetch(
+  `${API_URL}/users/login`,
         {
           method: "POST",
           headers: {

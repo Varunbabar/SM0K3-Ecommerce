@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+.alice-carousel__dots {
+  margin: 12px 0 20px;
+}
+
+.alice-carousel__dots-item {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #c4c4c4;
+}
+
+.alice-carousel__dots-item.__active {
+  background-color: #222;
+}

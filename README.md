@@ -26,7 +26,7 @@ A full-stack sneaker e-commerce website built using React.js, Spring Boot, and M
 
 ## Demo
 
-[View Project Recording](frontend/screenshot/SM0K3.mp4)
+[[View Project Recording](frontend/screenshot/SM0K3.mp4)](https://youtu.be/kO0xqXPhxOw)
 
 ## Run Locally
 

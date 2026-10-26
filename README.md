@@ -1,4 +1,3 @@
-@'
 # SM0K3 – Sneaker E-Commerce
 
 A full-stack sneaker e-commerce website built using React.js, Spring Boot, and MySQL.
